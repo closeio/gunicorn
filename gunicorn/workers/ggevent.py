@@ -147,6 +147,12 @@ class GeventWorker(AsyncWorker):
         except:
             pass
 
+    def handle(self, listener, client, addr):
+        # Connected socket timeout defaults to socket.getdefaulttimeout().
+        # This forces to blocking mode.
+        client.setblocking(1)
+        super(GeventWorker, self).handle(listener, client, addr)
+
     def handle_request(self, *args):
         try:
             super(GeventWorker, self).handle_request(*args)
