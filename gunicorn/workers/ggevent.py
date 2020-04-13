@@ -23,7 +23,7 @@ except ImportError:
 from gevent.pool import Pool
 from gevent.server import StreamServer
 from gevent.socket import wait_write, socket
-from gevent import pywsgi
+from gevent import pywsgi, getcurrent()
 
 import gunicorn
 from gunicorn.http.wsgi import base_environ
@@ -151,6 +151,7 @@ class GeventWorker(AsyncWorker):
     def handle(self, listener, client, addr):
         # Connected socket timeout defaults to socket.getdefaulttimeout().
         # This forces to blocking mode.
+        self.rid = getcurrent()
         client.setblocking(1)
         super(GeventWorker, self).handle(listener, client, addr)
 
