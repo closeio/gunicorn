@@ -623,6 +623,7 @@ class Arbiter(object):
         """
         worker_pids = list(self.WORKERS.keys())
         for pid in worker_pids:
+            print('killing', pid)
             self.kill_worker(pid, sig)
 
     def kill_worker(self, pid, sig):

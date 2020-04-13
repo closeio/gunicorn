@@ -44,6 +44,7 @@ class AsyncWorker(base.Worker):
                     # keepalive loop
                     proxy_protocol_info = {}
                     while self.alive:
+                        print('Looped', self.alive, self.pid)
                         req = None
                         with self.timeout_ctx():
                             req = six.next(parser)
@@ -54,6 +55,7 @@ class AsyncWorker(base.Worker):
                         else:
                             req.proxy_protocol_info = proxy_protocol_info
                         self.handle_request(listener_name, req, client, addr)
+                    print('loop exit', self.pid)
             except http.errors.NoMoreData as e:
                 self.log.debug("Ignored premature client disconnection. %s", e)
             except StopIteration as e:
@@ -82,6 +84,7 @@ class AsyncWorker(base.Worker):
                 else:
                     self.log.debug("Ignoring EPIPE")
         except Exception as e:
+            print('loop exit', self.pid, e)
             self.handle_error(req, client, addr, e)
         finally:
             util.close(client)
